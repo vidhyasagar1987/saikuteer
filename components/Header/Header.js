@@ -53,11 +53,10 @@ export default async function Header() {
 
       <div>
         {user !== null ? (
-          <div>
-            <p>Admin</p>
-
+          <Link href={"/admin"}>
+            Admin
             <SignOutButton />
-          </div>
+          </Link>
         ) : (
           <Link href={"/login"}>
             <Button className="flex gap-2">Login</Button>

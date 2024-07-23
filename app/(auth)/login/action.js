@@ -27,3 +27,14 @@ export async function signOut() {
   await supabase.auth.signOut();
   redirect("/login");
 }
+
+export async function fetchListings() {
+  const supabase = createClient();
+  try {
+    const { data, error } = await supabase.from("listing").select("*");
+    if (error) throw new Error(error.message);
+    return data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}

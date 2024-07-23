@@ -7,16 +7,11 @@ import * as Yup from "yup";
 import { Required } from "../constants";
 import { inputs } from "./PropertyFormFields";
 import FileUpload from "./FileUpload";
+import { UploadImage } from "./UploadImage";
 import { supabase } from "@/utils/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 
-function AddPropertyForm({
-  setOpen,
-  getListings,
-  isEdit,
-  setIsEdit,
-  currentProperty,
-}) {
+function AddPropertyForm({ setOpen, getListings, isEdit, currentProperty }) {
   const { toast } = useToast();
 
   const schema = Yup.object().shape({
@@ -25,6 +20,7 @@ function AddPropertyForm({
     address: Yup.string().required(Required),
     description: Yup.string().required(Required),
     type: Yup.array().min(1, "At least one amenity must be selected"),
+    image: Yup.string().required(Required),
   });
   const formik = useFormik({
     initialValues: {
@@ -39,9 +35,14 @@ function AddPropertyForm({
       features: currentProperty?.features || "",
       attractions: currentProperty?.attractions || "",
       url: currentProperty?.url || "",
+      image: "",
+      image_url: currentProperty?.image_url || "",
     },
     validationSchema: schema,
     onSubmit: async (values) => {
+      delete values.image;
+      // delete values.imageUrl;
+
       const payload = {
         area: Number(values.area),
         price: Number(values.price),
@@ -63,6 +64,7 @@ function AddPropertyForm({
           });
         }
         if (error) {
+          console.log(error);
           toast({
             variant: "destructive",
             title: "Uh oh! Something went wrong.",
@@ -100,14 +102,27 @@ function AddPropertyForm({
     formik.setFieldValue(target.name, target.value);
   };
 
-  console.log(formik.isSubmitting);
+  const handleImageChange = async (e) => {
+    const files = e.target.files;
+
+    formik.setFieldValue("image", URL.createObjectURL(files[0]));
+    // setPreview(URL.createObjectURL(files[0]));
+    const file = e.target.files[0];
+    if (file) {
+      try {
+        const imageUrl = await UploadImage(file);
+        formik.setFieldValue("image_url", imageUrl);
+
+        console.log(imageUrl);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
+    }
+  };
 
   return (
     <div>
-      <div>
-        <h2 className=" font-bold text-2xl pb-5">
-          Enter Details about the listing
-        </h2>
+      <div className="pt-10">
         <form onSubmit={formik.handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {inputs.map((item, i) => (
@@ -128,12 +143,12 @@ function AddPropertyForm({
               </div>
             ))}
             <div className="col-span-1 md:col-span-3">
-              <FileUpload />
+              <FileUpload handleChange={handleImageChange} formik={formik} currentProperty={currentProperty} />
             </div>
           </div>
 
           <div className=" flex  gap-3 mt-5">
-            <Button type="submit">
+            <Button type="submit" disabled={formik.isSubmitting}>
               {formik.isSubmitting ? "Submitting" : "Submit"}
             </Button>
             <Button
