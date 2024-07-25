@@ -8,7 +8,6 @@ export const UploadImage = async (file) => {
   const fileName = `${Date.now()}.${fileExt}`;
   const filePath = `${fileName}`;
 
-
   let { error } = await supabase.storage
     .from("SaiKuteer")
     .upload(filePath, file);
@@ -17,11 +16,21 @@ export const UploadImage = async (file) => {
     throw error;
   }
 
-  const { data: { publicUrl } } = supabase.storage.from('SaiKuteer').getPublicUrl(filePath);
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from("SaiKuteer").getPublicUrl(filePath);
 
   if (!publicUrl) {
-    throw new Error('Error retrieving public URL');
+    throw new Error("Error retrieving public URL");
   }
 
   return publicUrl;
+};
+
+export const RemoveImage = async (filePath) => {
+  const { error } = await supabase.storage.from("SaiKuteer").remove([filePath]);
+
+  if (error) {
+    throw error;
+  }
 };

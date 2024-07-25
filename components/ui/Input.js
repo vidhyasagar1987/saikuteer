@@ -6,7 +6,11 @@ const Input = ({ item, handleChange, formik }) => {
 
   return (
     <div className="flex flex-col w-full">
-      <label className={`text-xs pb-1 ${errors[name] ? "text-red-500" : ""}`}>
+      <label
+        className={`text-xs pb-1 ${
+          errors[name] && touched[name] && "text-red-500"
+        }`}
+      >
         {label} {required && <sup className="text-red-500 font-bold">*</sup>}
       </label>
       {type === "textarea" ? (
@@ -19,7 +23,9 @@ const Input = ({ item, handleChange, formik }) => {
           onBlur={handleBlur}
           className={`w-full h-32 p-3 outline-none bg-transparent text-xs
           border border-gray-600 rounded-md focus:border-gray-300 ${
-            errors[name] ? "border-red-400 focus:border-red-400" : ""
+            errors[name] &&
+            touched[name] &&
+            "border-red-400 focus:border-red-400"
           }`}
         />
       ) : type === "select" ? (
@@ -31,7 +37,9 @@ const Input = ({ item, handleChange, formik }) => {
           onBlur={handleBlur}
           className={`w-full p-3 outline-none bg-transparent text-xs
           border border-gray-600 rounded-md focus:border-gray-300 ${
-            errors[name] ? "border-red-400 focus:border-red-400" : ""
+            errors[name] &&
+            touched[name] &&
+            "border-red-400 focus:border-red-400"
           }`}
         >
           {options.map((option, i) => (
@@ -70,7 +78,9 @@ const Input = ({ item, handleChange, formik }) => {
               onBlur={handleBlur}
               className={`p-3 outline-none bg-transparent text-xs
               border border-gray-600 rounded-md focus:border-gray-300 ${
-                errors[name] ? "border-red-400 focus:border-red-400" : ""
+                errors[name] &&
+                touched[name] &&
+                "border-red-400 focus:border-red-400"
               }`}
             />
             <label
@@ -94,7 +104,9 @@ const Input = ({ item, handleChange, formik }) => {
               onBlur={handleBlur}
               className={`p-3 outline-none bg-transparent text-xs
               border border-gray-600 rounded-md focus:border-gray-300 ${
-                errors[name] ? "border-red-400 focus:border-red-400" : ""
+                errors[name] &&
+                touched[name] &&
+                "border-red-400 focus:border-red-400"
               }`}
             />
             <label htmlFor={`${name}-${option.value}`} className="text-xs pl-2">
@@ -113,7 +125,9 @@ const Input = ({ item, handleChange, formik }) => {
           onBlur={handleBlur}
           className={`w-full p-3 outline-none bg-transparent text-xs
           border border-gray-600 rounded-md focus:border-gray-300 ${
-            errors[name] ? "border-red-400 focus:border-red-400" : ""
+            errors[name] &&
+            touched[name] &&
+            "border-red-400 focus:border-red-400"
           }`}
         />
       ) : (
@@ -127,7 +141,9 @@ const Input = ({ item, handleChange, formik }) => {
           onBlur={handleBlur}
           className={`w-full p-3 outline-none bg-transparent text-xs
           border border-gray-600 rounded-md focus:border-gray-300 ${
-            errors[name] ? "border-red-400 focus:border-red-400" : ""
+            errors[name] &&
+            touched[name] &&
+            "border-red-400 focus:border-red-400"
           }`}
         />
       )}

@@ -37,7 +37,6 @@ function AdminListing() {
             ...item,
             category: item.category === "for_sale" ? "For Sale" : "For Rent",
             status: item.status === "active" ? "Active" : "Closed",
-            price: `₹ ${item.price.toFixed(2)}`,
           }))
       );
     } catch (error) {
